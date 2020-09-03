@@ -2,6 +2,8 @@ const express = require("express");
 const exphbs = require('express-handlebars');
 const bodyParser = require("body-parser");
 const SettingsBill = require("./settings-bill");
+const moment = require('moment'); 
+moment().format();
 
 const app = express();
 const settingsBill = SettingsBill();
@@ -46,10 +48,21 @@ app.post("/action", function (req, res){
 })
 
 app.get("/actions", function (req, res){
-    res.render("actions", {actions: settingsBill.actions() });
+
+    var actionList = settingsBill.actions() 
+    for (let key of actionList){
+        key.ago = moment(key.timestamp).fromNow()
+        }
+    res.render("actions", {actions: actionList});
+   
 })
 
 app.get("/actions/:actionType", function (req, res){
+
+    var actionList = settingsBill.actionsFor(req.params.actionType) 
+    for (let key of actionList){
+        key.ago = moment(key.timestamp).fromNow()
+    }
     const actionType = req.params.actionType;
     res.render("actions", {actions: settingsBill.actionsFor(actionType) });
 })
