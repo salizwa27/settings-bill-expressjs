@@ -19,7 +19,8 @@ app.use(bodyParser.json())
 app.get("/", function(req, res){
     res.render("index", {
         settings: settingsBill.getSettings(),
-        totals: settingsBill.totals()
+        totals: settingsBill.totals(),
+        color: settingsBill.colorCode() 
 
     });
 });
